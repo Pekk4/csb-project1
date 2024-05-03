@@ -13,7 +13,7 @@
     {% endif %}
     <h2>Send a new message</h2>
     <form action="/send" method="post">
-      {% csrf_token %}
+      <!--{% csrf_token %}-->
       <p>
         Message: <input type="text" name="message">
       </p>

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Message
 
@@ -19,6 +20,7 @@ def loginView(request):
 
   return redirect('/')
 
+@csrf_exempt
 def addView(request):
   if request.method == 'POST':
     user = User.objects.get(username=request.user)
