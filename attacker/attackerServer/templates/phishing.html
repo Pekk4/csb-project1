@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>Phishing site</title>
+    <style>
+      body {
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      #submit {
+        margin: 20px;
+        padding: 30px;
+        font-size: large;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      {% load static %}
+      <img src="{% static 'craiyon_214954_a_cute_kitten.png' %}" alt="A cute kitten">
+    </div>
+    <br />
+    <div>
+      <form action="/pwn">
+        <input type="submit" id="submit" value="Click to see more cute kittens!" />
+      </form>
+    </div>
+  </body>
+</html>
