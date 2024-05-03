@@ -1,9 +1,9 @@
 from django.urls import path
-from django.contrib.auth.views import LoginView, LogoutView
 
-from .views import mainView, loginView
+from .views import mainView, loginView, addView
 
 urlpatterns = [
     path('', mainView, name='main'),
     path('login', loginView, name='login'),
+    path('send', addView, name='send'),
 ]

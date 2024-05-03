@@ -1,8 +1,24 @@
 <html>
   <head>
-    <title>Main</title>
+    <title>Messages app - Chat with your friends!</title>
   </head>
   <body>
-    <h1>Main</h1>
+    <h1>Messages</h1>
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li>[{{ message.time|date:"d.m.Y H:i" }}] <b>{{ message.sender.username }}</b> says: {{ message.content }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <h2>Send a new message</h2>
+    <form action="/send" method="post">
+      {% csrf_token %}
+      <p>
+        Message: <input type="text" name="message">
+      </p>
+      <br />
+      <button type="submit">Submit</button>
+    </form>
   </body>
 </html>

@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+
+from .models import Message
 
 
 # Create your views here.
@@ -16,8 +19,18 @@ def loginView(request):
 
   return redirect('/')
 
+def addView(request):
+  if request.method == 'POST':
+    user = User.objects.get(username=request.user)
+
+    Message.objects.create(sender=user, content=request.POST['message'])
+
+  return redirect('/')
+
 def mainView(request):
   if not request.user.is_authenticated:
     return render(request, 'login.html')
 
-  return render(request, 'main.html')
+  messages = Message.objects.all()
+
+  return render(request, 'main.html', {'messages': messages})
