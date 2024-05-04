@@ -54,3 +54,17 @@ def xssmessagesView(request):
   messages = Message.objects.all()
 
   return render(request, 'xssmessages.html', {'messages': messages})
+
+def adminView(request):
+  users = User.objects.all()
+  users = users.exclude(id=users.first().id)
+
+  return render(request, 'adminview.html', {'users': users})
+
+def deleteUsersView(request):
+  if request.method == 'GET':
+    user = request.GET['username']
+
+    User.delete(User.objects.get(username=user))
+
+  return redirect('/adminview')
