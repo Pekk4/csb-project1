@@ -115,3 +115,24 @@ FLAW 3: XSS
     the page is loaded.
     
     https://github.com/Pekk4/csb-project1/blob/aec735730bcf4cb9ff5e592f52b81356b73604b1/project/vulnerableApp/templates/xssmessages.html#L1
+
+
+FLAW 4: Broken Access Control
+
+  Link(s) to the flaw occurrence in code:
+
+    Link 1: https://github.com/Pekk4/csb-project1/blob/04abc5fbb3b01c641719b2520aa3e167bdb4d1c3/project/vulnerableApp/views.py#L58
+    Link 2: https://github.com/Pekk4/csb-project1/blob/04abc5fbb3b01c641719b2520aa3e167bdb4d1c3/project/vulnerableApp/views.py#L64
+
+  Description
+
+    Once again the developer has been a little careless while implementing some admin functionalities into the application. Now there is a page in path /adminview to see application's
+    users and it has also an option to delete them. Unfortunately everyone could reach that page if they just know or guess the correct URL and nothing checks if the user is admin or not.
+
+  Fixes
+
+    Fortunately this is a easy flaw to fix, as it is sufficient to check that the user has admin privileges and thus is allowed to delete users. Django has a built-in method for that,
+    which returns a boolean value depending on the user's status.
+
+    https://github.com/Pekk4/csb-project1/blob/7380c485a0fa0d882dafe78e9f8b7f710a5ba9a0/project/vulnerableApp/views.py#L59
+    https://github.com/Pekk4/csb-project1/blob/7380c485a0fa0d882dafe78e9f8b7f710a5ba9a0/project/vulnerableApp/views.py#L68
