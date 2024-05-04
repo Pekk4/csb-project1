@@ -51,8 +51,36 @@ FLAW 1: CSRF
 
     CSRF middleware is in use, the decorator is missing and the token is added in template's form.
 
-  References
+  References used in CSRF flaw:
+    Course material
+    https://owasp.org/www-community/attacks/csrf
 
-    References used in CSRF flaw:
-      Course material
-      https://owasp.org/www-community/attacks/csrf
+
+FLAW 2: Injection
+
+  Link(s) to the flaw occurrence in code:
+
+    Link 1: https://github.com/Pekk4/csb-project1/blob/c951828c258dc9c5ad4aa1db1b22c665dce7b9ce/project/vulnerableApp/views.py#L42
+
+  Description
+
+    Another flaw I chose is SQL injection, where attacker is able to get unauthorized access to data by injecting malicious SQL queries as a part of the application's
+    original SQL queries for example via application's input forms. These inputs are not sanitized and usually they are directly part of the original SQL query, when it is possible to arbitrarily
+    to manipulate the query in a way that attacker wants. I my Django app the scenario is just like this; there is a form in main.html where is <select> element listing application's users.
+    There are usernames as options and every option has user's id as a value. This id is used directly in that view method's SQL query (link 1) and if attacker changes that value, the value is
+    handled as a part of the query. Attacker opens their browser's developer tools and just changes that value to 
+
+      666' UNION SELECT password,username FROM auth_user WHERE is_superuser=1 -- 
+
+    and then submits the form, and as a result they will get every superuser's password listed instead of wanted user's messages, which is the original purpose of that form.
+
+  Fixes
+
+    As with CSRF, modern frameworks have helped with SQL injections as well. Many frameworks does have a built-in support for Object-Relational Mappings, ORMs, which handles at least the most basic
+    SQL queries in a correct way, so developers does not need to write their own queries. Anyhow, it is not always the case but sometimes custom queries are needed. Then the correct way to
+    prevent SQL injections to happen is to use parameterized SQL queries (or prepared statements, which is pretty similar), where the variables are given to a used SQL driver as a parameter and
+    that driver takes care of for example escaping the quotes from the inputs so that they can't alter the original query when joined into it.
+
+    https://github.com/Pekk4/csb-project1/blob/064f72946d3ae241fec4aaf4c2fd479b7c275d2b/project/vulnerableApp/views.py#L43
+    
+    https://github.com/Pekk4/csb-project1/blob/064f72946d3ae241fec4aaf4c2fd479b7c275d2b/project/vulnerableApp/views.py#L27 (Example of using ORM instead of custom query)
