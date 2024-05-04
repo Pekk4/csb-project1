@@ -58,7 +58,6 @@ def xssmessagesView(request):
 def adminView(request):
   if request.user.is_superuser:
     users = User.objects.all()
-    users = users.exclude(id=users.first().id)
 
     return render(request, 'adminview.html', {'users': users})
 
