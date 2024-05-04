@@ -20,5 +20,16 @@
       <br />
       <button type="submit">Submit</button>
     </form>
+    <h2>Show messages from a spesific user</h2>
+    <form action="/usermessages" method="post">
+      {% csrf_token %}
+      <label for="user">Select a user:</label>
+      <select id="user" name="user">
+        <option value="2">Bob</option>
+        <option value="3">Alice</option>
+      </select>
+      <br />
+      <button type="submit">Submit</button>
+    </form>
   </body>
 </html>

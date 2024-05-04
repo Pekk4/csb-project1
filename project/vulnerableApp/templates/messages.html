@@ -1,0 +1,16 @@
+<html>
+  <head>
+    <title>Messages app - Chat with your friends!</title>
+  </head>
+  <body>
+    <h1>Messages</h1>
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li>[{{ message.time|date:"d.m.Y H:i" }}]: {{ message.content }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <a href="/">Get back</a>
+  </body>
+</html>
