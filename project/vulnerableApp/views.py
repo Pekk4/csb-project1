@@ -39,7 +39,8 @@ def mainView(request):
 def usermessagesView(request):
   if request.method == 'POST':
     with connection.cursor() as cursor:
-      cursor.execute(f"SELECT content, time FROM vulnerableApp_message WHERE sender_id='{request.POST['user']}'")
+      param = [request.POST['user']]
+      cursor.execute(f"SELECT content, time FROM vulnerableApp_message WHERE sender_id=%s", param)
 
       results = cursor.fetchall()
       messages = [{"content": result[0], "time": result[1]} for result in results]
