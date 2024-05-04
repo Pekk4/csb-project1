@@ -1,0 +1,58 @@
+Repository: https://github.com/Pekk4/csb-project1
+
+Installation:
+
+  Clone repository, open working directory and activate python virtual environment with:
+
+    git clone https://github.com/Pekk4/csb-project1
+    cd csb-project1/
+    python3 -m venv venv
+  
+  Then install project's dependencies:
+
+    pip install -r requirements.txt
+
+  Next run Django's migrations and then you can start the server:
+
+    cd project/
+    python3 manage.py migrate
+    python3 manage.py runserver
+
+FLAW 1: CSRF
+
+  Link(s) to the flaw occurrence in code:
+
+    Link 1: https://github.com/Pekk4/csb-project1/blob/962e7268f2a91e03db28ae00baf846b8c7c42fe5/project/project/settings.py#L47
+    Link 2: https://github.com/Pekk4/csb-project1/blob/962e7268f2a91e03db28ae00baf846b8c7c42fe5/project/vulnerableApp/views.py#L23
+    Link 3: https://github.com/Pekk4/csb-project1/blob/962e7268f2a91e03db28ae00baf846b8c7c42fe5/project/vulnerableApp/templates/main.html#L16
+
+  Description
+
+    My first flaw is a Cross Site Request Forgery, CSRF. As it is also said on the course page, it is not very common anymore and thus not even on the OWASP's list.
+    Anyway, I chosed it because it was funny to try it myself. According to course page and OWASP's CSRF-page, many modern frameworks has a built-in protection for
+    CSRF and for example with Django, one must make an effort to get the Django app vulnerable for CSRF attacks, as it has the built-in protection for that.
+
+    In a successful CSRF attack, an attacker is able to execute such an actions in the target web application that the victims privileges are sufficient for.
+    This is possible for example by tricking the victim to open a malicious web page while they have an active session open to the target system. That malicious page
+    may have for example a hidden image tag, which has it's source URL set to target system so it makes the GET request when page is loaded.
+    I implemented my CSRF attack so that the victim is tricked to open a malicious page and when user clicks the button (of course they do, who could resist cute kittens??),
+    a message has been sent to the target system on behalf of the victim. The attack can be found from project's attacker/ directory.
+
+  Fixes
+
+    In Django the CSRF flaw can be implemented for example either by disabling a CSRF middleware (link 1), or using "@csrf_exempt" decorator with a view method (link 2), which disables it
+    from a spesific view. Forgetting "{% csrf_token %}" (link 3) from html templates is not sufficient alone, but it needs also the CSRF middleware be disabled, otherwise the app just crashes.
+
+    Anyway, fixes can be seen here (same rows but in main branch):
+
+    https://github.com/Pekk4/csb-project1/blob/96fd8a7523dc7226e773b930f6408a2a114a1633/project/project/settings.py#L47
+    https://github.com/Pekk4/csb-project1/blob/96fd8a7523dc7226e773b930f6408a2a114a1633/project/vulnerableApp/views.py#L22
+    https://github.com/Pekk4/csb-project1/blob/96fd8a7523dc7226e773b930f6408a2a114a1633/project/vulnerableApp/templates/main.html#L16
+
+    CSRF middleware is in use, the decorator is missing and the token is added in template's form.
+
+  References
+
+    References used in CSRF flaw:
+      Course material
+      https://owasp.org/www-community/attacks/csrf
