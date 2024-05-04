@@ -56,15 +56,21 @@ def xssmessagesView(request):
   return render(request, 'xssmessages.html', {'messages': messages})
 
 def adminView(request):
-  users = User.objects.all()
-  users = users.exclude(id=users.first().id)
+  if request.user.is_superuser:
+    users = User.objects.all()
+    users = users.exclude(id=users.first().id)
 
-  return render(request, 'adminview.html', {'users': users})
+    return render(request, 'adminview.html', {'users': users})
 
-def deleteUsersView(request):
-  if request.method == 'GET':
-    user = request.GET['username']
+  return redirect('/')
 
-    User.delete(User.objects.get(username=user))
+def deleteusersView(request):
+  if request.user.is_superuser:
+    if request.method == 'GET':
+      user = request.GET['username']
 
-  return redirect('/adminview')
+      User.delete(User.objects.get(username=user))
+
+    return redirect('/adminview')
+
+  return redirect('/')
