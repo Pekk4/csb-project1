@@ -11,6 +11,9 @@
         {% endfor %}
       </ul>
     {% endif %}
+    <br />
+    <a href="/messages">See all messages</a>
+    <br />
     <h2>Send a new message</h2>
     <form action="/send" method="post">
       {% csrf_token %}

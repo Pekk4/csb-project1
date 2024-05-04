@@ -16,10 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from attackerServer.views import mainView, pwnView
+from attackerServer.views import mainView, pwnView, xssView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', mainView),
-    path('pwn', pwnView)
+    path('pwn', pwnView),
+    path('xss', xssView)
 ]

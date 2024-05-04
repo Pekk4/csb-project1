@@ -1,3 +1,4 @@
+{% autoescape off %}
 <html>
   <head>
     <title>Messages app - Chat with your friends!</title>
@@ -7,10 +8,11 @@
     {% if messages %}
       <ul>
         {% for message in messages %}
-          <li>[{{ message.time|date:"d.m.Y H:i" }}]: {{ message.content }}</li>
+          <li>[{{ message.time|date:"d.m.Y H:i" }}] <b>{{ message.sender.username }}</b> says: {{ message.content }}</li>
         {% endfor %}
       </ul>
     {% endif %}
-    <a href="/">Get back</a>
+    <a href="/">Get back to main page</a>
   </body>
 </html>
+{% endautoescape %}

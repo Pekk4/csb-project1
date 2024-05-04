@@ -45,4 +45,12 @@ def usermessagesView(request):
       results = cursor.fetchall()
       messages = [{"content": result[0], "time": result[1]} for result in results]
 
-  return render(request, 'messages.html', {'messages': messages})
+  return render(request, 'usermessages.html', {'messages': messages})
+
+def xssmessagesView(request):
+  if not request.user.is_authenticated:
+    return render(request, 'login.html')
+
+  messages = Message.objects.all()
+
+  return render(request, 'xssmessages.html', {'messages': messages})
