@@ -18,6 +18,25 @@ Installation:
     python3 manage.py migrate
     python3 manage.py runserver
 
+  Attacker server in attacker/ works with the same virtualenv, so activate it in another terminal and then start it in the same way.
+
+  If you want to use pre-configured users, run 
+
+    python3 manage.py loaddata users.json
+
+  before starting the server. It contains following users:
+
+    dumbledore:*l-~Phi=y,e^s.!x9Tio (Administrator account)
+    bob:dylan666
+    alice:cooper666
+    testuser1 (for testing deleting functionality)
+    testuser2 (for testing deleting functionality)
+    testuser3 (for testing deleting functionality)
+
+
+OWASP list: https://owasp.org/www-project-top-ten/2017/Top_10
+
+
 FLAW 1: CSRF
 
   Link(s) to the flaw occurrence in code:
@@ -37,6 +56,7 @@ FLAW 1: CSRF
     may have for example a hidden image tag, which has it's source URL set to target system so it makes the GET request when page is loaded.
     I implemented my CSRF attack so that the victim is tricked to open a malicious page and when user clicks the button (of course they do, who could resist cute kittens??),
     a message has been sent to the target system on behalf of the victim. The attack can be found from project's attacker/ directory.
+    Victim gets and URL to http://localhost:9000 and when victim clicks that tempting button, the message will be sent.
 
   Fixes
 
@@ -50,10 +70,6 @@ FLAW 1: CSRF
     https://github.com/Pekk4/csb-project1/blob/96fd8a7523dc7226e773b930f6408a2a114a1633/project/vulnerableApp/templates/main.html#L16
 
     CSRF middleware is in use, the decorator is missing and the token is added in template's form.
-
-  References used in CSRF flaw:
-    Course material
-    https://owasp.org/www-community/attacks/csrf
 
 
 FLAW 2: Injection
@@ -136,3 +152,45 @@ FLAW 4: Broken Access Control
 
     https://github.com/Pekk4/csb-project1/blob/7380c485a0fa0d882dafe78e9f8b7f710a5ba9a0/project/vulnerableApp/views.py#L59
     https://github.com/Pekk4/csb-project1/blob/7380c485a0fa0d882dafe78e9f8b7f710a5ba9a0/project/vulnerableApp/views.py#L68
+
+
+FLAW 5: Security Misconfiguration (and Insufficient Logging & Monitoring)
+
+  Link(s) to the flaw occurrence in code:
+
+    Link 1: https://github.com/Pekk4/csb-project1/blob/ffbb8c844989a7dc2cbbc35823341d3a4925d23c/project/project/settings.py#L23
+    Link 2: https://github.com/Pekk4/csb-project1/blob/ffbb8c844989a7dc2cbbc35823341d3a4925d23c/project/project/settings.py#L26
+    Link 3: https://github.com/Pekk4/csb-project1/blob/ffbb8c844989a7dc2cbbc35823341d3a4925d23c/project/project/settings.py#L126
+    Link 4: https://github.com/Pekk4/csb-project1/blob/fcbb6cdf66ca1acc594262eb998582fefbedb704/project/users.json#L9
+
+  Description
+
+    These configurations causes a Security Misconfiguration flaw. For example link 1 has a hardcoded value, which is publicly available in a public repository and thus an attacker
+    can exploit it to guess session tokens and passwords, as Django uses it when encrypting those. Link 2 allows an attacker to cause intentional errors on application and then gather
+    information about the system via error messages and stack traces. Link 3 satisfies also Insufficient Logging & Monitoring flaw, as it causes logging to be disabled and then 
+    administrators can't see what is going on, for example DDOS attacks or brute-force logins. Link 4 indicates that there is "admin" account in use, which is very easy to guess and if
+    (when) password is also "admin", attacker gets admin access quite easily.
+
+  Fixes
+
+    Hardcoded secret moved into .env file which is added into .gitignore as well, so that kind of secrets does not end up into public repository. Debug logging is set to false, so
+    users will not see any error messages, if errors encountered. Basic logging level in Django is pretty good, so it is enough to comment out or delete that disable logging and
+    basic "admin" account is deleted and admin privileges has given to the more "normal" user (the name could be better, as dumbledore is probably a part of dictionary attacks wordlists).
+    (Users passwords are visible (encrypted, but still) in repository which is a very bad thing, but in this case the users.json is only for helping peer reviewers to use the app :D)
+
+    https://github.com/Pekk4/csb-project1/blob/a7d1a9ceb5715a8eb55adb7eaecca9f61e302c7e/project/project/settings.py#L26
+    (https://github.com/Pekk4/csb-project1/blob/d1aa00cf631bbbd41c9554326d2b1d68bc7d3066/.gitignore#L6)
+    https://github.com/Pekk4/csb-project1/blob/a7d1a9ceb5715a8eb55adb7eaecca9f61e302c7e/project/project/settings.py#L29
+    https://github.com/Pekk4/csb-project1/blob/a7d1a9ceb5715a8eb55adb7eaecca9f61e302c7e/project/project/settings.py#L129
+    https://github.com/Pekk4/csb-project1/blob/0abf00905ab85add65a640385f63bd5b32d0428e/project/users.json#L98
+
+  References
+    Course material
+    https://owasp.org/www-community/attacks/csrf
+    https://owasp.org/www-project-top-ten/2017/A1_2017-Injection
+    https://owasp.org/www-project-top-ten/2017/A7_2017-Cross-Site_Scripting_(XSS)
+    https://owasp.org/www-project-top-ten/2017/A2_2017-Broken_Authentication
+    https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration
+    https://owasp.org/www-project-top-ten/2017/A10_2017-Insufficient_Logging%2526Monitoring
+
+    I'm quite familiar with these topics and used refs mainly for checking the definitions.
