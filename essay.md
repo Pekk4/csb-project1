@@ -2,7 +2,10 @@
 
 Repository: [https://github.com/Pekk4/csb-project1](https://github.com/Pekk4/csb-project1)
 
-## Installation:
+# IMPORTANT NOTE!
+Adding .env file was missing from the original essay's instructions (the one submitted to course page) and it's needed to run main branch version of the application!
+
+### Installation 
 
 Clone repository, open working directory and activate python virtual environment with:
 
@@ -18,17 +21,19 @@ Then install project's dependencies:
 pip install -r requirements.txt
 ```
 
-Next run Django's migrations and then you can start the server:
+Next set .env file, run Django's migrations and then you can start the server:
 
 ```bash
 cd project/
+mv .env.example .env # Add secret key into the .env file, it can be generated e.g. by running 'openssl rand -base64 32' (without quotes)
 python3 manage.py migrate
 python3 manage.py runserver
 ```
 
 Attacker server in attacker/ works with the same virtualenv, so activate it in another terminal and then start it in the same way.
 
-If you want to use pre-configured users, run 
+#### Pre-configured users 
+If you want to use pre-configured users (in the main app, attacker server does not need users), run 
 
 ```bash
 python3 manage.py loaddata users.json
@@ -47,7 +52,7 @@ testuser3 (for testing deleting functionality)
 
 ## OWASP List
 
-OWASP list: https://owasp.org/www-project-top-ten/2017/Top_10 (2017)
+OWASP list used in project: https://owasp.org/www-project-top-ten/2017/Top_10 (2017)
 
 
 ## FLAW 1: CSRF
